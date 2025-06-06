@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 async function fetchTodoData(id) {
     const response = await fetch(
@@ -19,27 +19,28 @@ function Todo({ todoData }) {
 
 //Run after submit button is click
 export default function TodoData() {
+    const [inputValue, setInputValue] = useState('')
     const [userInput, setUserInput] = useState('');
     const [todoData, setTodoData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     function Submit() {
-        setUserInput(input.value);
+        setInputValue(userInput);
     }
 
     useEffect(() => {
-        if (userInput) {
+        if (inputValue) {
             setIsLoading(true);
-            fetchTodoData(userInput)
+            fetchTodoData(inputValue)
                 .then((data) => setTodoData(data))
                 .catch((error) => console.log(error))
                 .finally(() => setIsLoading(false));
         }
-    }, [userInput]);
+    }, [inputValue]);
 
     return (
         <div>
-            <input id="input" type="text" placeholder="Please enter an ID" />
+            <input type="text" onChange={(event) => setUserInput(event.target.value)} placeholder="Please enter an ID" />
             <button onClick={Submit}>Submit</button>
             {isLoading && <p>Loading...</p>}
             {todoData && todoData.title && (
